@@ -52,5 +52,6 @@ for beta in betas:
     url = beta.get('url')
     if name is not None and url is not None:
         html = simple_get(url)
-        beta_available = is_beta_available(html) 
-        print('{0}: {1}'.format(name, beta_available))
+        if html is not None:
+            beta_available = is_beta_available(html) 
+            print('{0}: {1}'.format(name, beta_available))
