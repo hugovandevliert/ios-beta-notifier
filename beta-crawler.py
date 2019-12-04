@@ -1,3 +1,4 @@
+import yaml
 from sys import getsizeof
 from requests import get
 from requests.exceptions import RequestException
@@ -37,16 +38,19 @@ def is_beta_available(raw_html):
                 return True
     return False
 
-# VLC
-page_html = simple_get('https://testflight.apple.com/join/bbyXP6Lx')
+def parse_yaml(file):
+    with open(file, 'r') as stream:
+        try:
+            return yaml.safe_load(stream)
+        except yaml.YAMLError as er:
+            print(er)
+            return []
 
-# SwiftKey
-# page_html = simple_get('https://testflight.apple.com/join/yhIhAvjp')
-
-# Whatsapp
-# page_html = simple_get('https://testflight.apple.com/join/s4rTJVPb')
-    
-if page_html is not None:
-    print(is_beta_available(page_html))
-else:
-    print('Error: No HTMl available')
+betas = parse_yaml('betas.yaml')
+for beta in betas:
+    name = beta.get('name') 
+    url = beta.get('url')
+    if name is not None and url is not None:
+        html = simple_get(url)
+        beta_available = is_beta_available(html) 
+        print('{0}: {1}'.format(name, beta_available))
