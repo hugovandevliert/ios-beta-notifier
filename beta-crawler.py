@@ -1,4 +1,6 @@
+import os
 import yaml
+import configparser
 from sys import getsizeof
 from requests import get
 from requests.exceptions import RequestException
@@ -13,15 +15,22 @@ def main():
         url = beta.get('url')
         if name is None or url is None:
             continue
-        html = simple_get(url)
+        html = get_html(url)
         if html is None:
             continue
 
         beta_available = is_beta_available(html)
-        print_beta_status(name, beta_available)
+        output = '{0}: {1}'.format(name, beta_available)
+
+        parser = configparser.ConfigParser()
+        parser.read('config.ini')
+        bot_token = parser.get('telegram_bot', 'bot_token')
+        chat_id = parser.get('telegram_bot', 'chat_id')
+
+        print(telegram_bot_sendtext(bot_token, chat_id, output))
 
 
-def simple_get(url):
+def get_html(url):
     try:
         with closing(get(url, stream=True)) as resp:
             if not is_good_response(resp):
@@ -65,8 +74,12 @@ def parse_yaml(file):
             return []
 
 
-def print_beta_status(name, is_available):
-    print('{0}: {1}'.format(name, is_available))
+def telegram_bot_sendtext(bot_token, chat_id, message):
+    send_text = 'https://api.telegram.org/bot' + bot_token + \
+        '/sendMessage?chat_id=' + chat_id + '&parse_mode=Markdown&text=' + message
+
+    response = get(send_text)
+    return response.json()
 
 
 main()
