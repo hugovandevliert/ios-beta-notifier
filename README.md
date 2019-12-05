@@ -39,7 +39,7 @@ To add a new beta to crawl, paste the following at the end of the `betas.yaml` f
 
 ## Authors
 
-Made by @hugovandevliert.
+Made by [@hugovandevliert](https://github.com/hugovandevliert).
 
 ## License
 
