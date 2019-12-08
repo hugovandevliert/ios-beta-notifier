@@ -1,15 +1,32 @@
 import os
-import yaml
+import sys
+import time
+import schedule
 import configparser
-from sys import getsizeof
-from requests import get
-from requests.exceptions import RequestException
-from contextlib import closing
-from bs4 import BeautifulSoup
+import requests
+import yaml
+import bs4
+import contextlib
 
 
-def main():
+betas = []
+bot_token = ''
+chat_id = ''
+
+
+def init():
+    global betas
     betas = parse_yaml('betas.yaml')
+
+    parser = configparser.ConfigParser()
+    parser.read('config.ini')
+
+    global bot_token, chat_id
+    bot_token = parser.get('telegram_bot', 'bot_token')
+    chat_id = parser.get('telegram_bot', 'chat_id')
+
+
+def check_betas(always_send_result=False):
     for beta in betas:
         name = beta.get('name')
         url = beta.get('url')
@@ -20,24 +37,23 @@ def main():
             continue
 
         beta_available = is_beta_available(html)
-        output = '{0}: {1}'.format(name, beta_available)
 
-        parser = configparser.ConfigParser()
-        parser.read('config.ini')
-        bot_token = parser.get('telegram_bot', 'bot_token')
-        chat_id = parser.get('telegram_bot', 'chat_id')
+        if not beta_available and not always_send_result:
+            continue
+
+        output = '{0}: {1}'.format(name, beta_available)
 
         print(telegram_bot_sendtext(bot_token, chat_id, output))
 
 
 def get_html(url):
     try:
-        with closing(get(url, stream=True)) as resp:
+        with contextlib.closing(requests.get(url, stream=True)) as resp:
             if not is_good_response(resp):
                 return None
             return resp.content
 
-    except RequestException as e:
+    except requests.RequestException as e:
         print('Error during requests to {0} : {1}'.format(url, str(e)))
         return None
 
@@ -50,10 +66,10 @@ def is_good_response(resp):
 
 
 def is_beta_available(raw_html):
-    html = BeautifulSoup(raw_html, 'html.parser')
+    html = bs4.BeautifulSoup(raw_html, 'html.parser')
     beta_status_containers = html.find_all('div', class_='beta-status')
 
-    if getsizeof(beta_status_containers) <= 0:
+    if sys.getsizeof(beta_status_containers) <= 0:
         print('Error: Unknown beta status')
         return False
 
@@ -78,8 +94,15 @@ def telegram_bot_sendtext(bot_token, chat_id, message):
     send_text = 'https://api.telegram.org/bot' + bot_token + \
         '/sendMessage?chat_id=' + chat_id + '&parse_mode=Markdown&text=' + message
 
-    response = get(send_text)
+    response = requests.get(send_text)
     return response.json()
 
 
-main()
+init()
+
+schedule.every(1).to(3).minutes.do(check_betas())
+schedule.every().day.at("09:00").do(check_betas(True))
+
+while True:
+    schedule.run_pending()
+    time.sleep(1)
