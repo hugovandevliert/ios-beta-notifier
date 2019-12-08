@@ -27,6 +27,10 @@ def init():
 
 
 def check_betas(always_send_result=False):
+    message = ''
+    if always_send_result:
+        message = 'Your daily beta report:\n'
+
     for beta in betas:
         name = beta.get('name')
         url = beta.get('url')
@@ -41,9 +45,10 @@ def check_betas(always_send_result=False):
         if not beta_available and not always_send_result:
             continue
 
-        output = '{0}: {1}'.format(name, beta_available)
+        beta_status = 'available' if beta_available else 'not available'
+        message += '\nThe {0} beta is {1}.'.format(name, beta_status)
 
-        print(telegram_bot_sendtext(bot_token, chat_id, output))
+    print(telegram_bot_sendtext(bot_token, chat_id, message))
 
 
 def get_html(url):
