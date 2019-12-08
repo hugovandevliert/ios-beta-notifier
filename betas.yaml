@@ -1,12 +1,15 @@
 - 
     name: "WhatsApp"
     url: "https://testflight.apple.com/join/s4rTJVPb"
--
-    name: "SwiftKey"
-    url: "https://testflight.apple.com/join/bbyXP6Lx"
 - 
-    name: "VLC"
-    url: "https://testflight.apple.com/join/yhIhAvjp"
+    name: "WhatsApp Business"
+    url: "https://testflight.apple.com/join/oscYikr0"
+-
+    name: "Snapchat"
+    url: "https://testflight.apple.com/join/crlFhtQy"
+- 
+    name: "Twitch"
+    url: "https://testflight.apple.com/join/8vRKFAiY"
 -
     name: "Spotify"
     url: "https://testflight.apple.com/join/1SyedSId"
