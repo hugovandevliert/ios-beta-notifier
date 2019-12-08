@@ -100,8 +100,8 @@ def telegram_bot_sendtext(bot_token, chat_id, message):
 
 init()
 
-schedule.every(1).to(3).minutes.do(check_betas())
-schedule.every().day.at("09:00").do(check_betas(True))
+schedule.every(1).to(3).minutes.do(check_betas)
+schedule.every().day.at("09:00").do(check_betas, always_send_result=True)
 
 while True:
     schedule.run_pending()
