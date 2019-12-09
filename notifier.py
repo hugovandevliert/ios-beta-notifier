@@ -15,11 +15,13 @@ chat_id = ''
 
 
 def init():
+    current_dir = os.path.dirname(os.path.realpath(__file__))
+
     global betas
-    betas = parse_yaml('betas.yaml')
+    betas = parse_yaml(os.path.join(current_dir, "betas.yaml"))
 
     parser = configparser.ConfigParser()
-    parser.read('config.ini')
+    parser.read(os.path.join(current_dir, 'config.ini'))
 
     global bot_token, chat_id
     bot_token = parser.get('telegram_bot', 'bot_token')
