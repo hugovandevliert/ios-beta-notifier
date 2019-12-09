@@ -1,15 +1,19 @@
-# iOS Beta Crawler
+# iOS Beta Notifier
 
-A tool for checking iOS beta availability.
+This tool notifies you when one of your iOS beta applications become available!
+
+This application periodically crawls iOS beta sites to determine its status.
+When a beta becomes available, a message is sent to the user through a Telegram bot.
+Every day at 09:00, the user gets an overview of all betas.
 
 ## Installation
 
 ```bash
 # clone the repo
-git clone https://github.com/hugovandevliert/ios-beta-crawler
+git clone https://github.com/hugovandevliert/ios-beta-notifier
 
-# change the working directory to ios-beta-crawler
-cd ios-beta-crawler
+# change the working directory to ios-beta-notifier
+cd ios-beta-notifier
 
 # install python3 and python3-pip if they are not installed
 
@@ -17,25 +21,31 @@ cd ios-beta-crawler
 python3 -m pip install -r requirements.txt
 ```
 
-<!-- Disabled as long as this repo is private -->
-<!-- [![Open in Cloud Shell](https://gstatic.com/cloudssh/images/open-btn.png)](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/hugovandevliert/ios-beta-crawler&tutorial=README.md) -->
+## Setup
 
-## Usage
+Make a copy of the `config.ini.example` file and save it as `config.ini`.
+[Create a Telegram bot](https://core.telegram.org/bots#3-how-do-i-create-a-bot) and fill in the bot_token and chat_id properties.
 
-To run the beta crawler:
-
-```bash
-python3 beta-crawler.py
-```
+### Adding betas
 
 The `betas.yaml` file is used to specify what websites will be crawled.
-To add a new beta to crawl, paste the following at the end of the `betas.yaml` file:
+To add a new beta, paste the following at the end of the `betas.yaml` file:
 
 ```yaml
 -
     name: "BetaName"
     url: "https://testflight.apple.com/join/BetaUrl"
 ```
+
+## Usage
+
+To run the beta notifier:
+
+```bash
+python3 notifier.py
+```
+
+It is recommended to run the application as a background process or a service.
 
 ## Authors
 
