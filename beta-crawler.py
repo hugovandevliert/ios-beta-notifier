@@ -46,8 +46,10 @@ def check_betas(always_send_result=False):
 
         if beta_available:
             beta_status = 'available: {0}'.format(url)
+            betas.remove(beta)
         else:
             beta_status = 'not available'
+
         message += '\nThe {0} beta is {1}.'.format(name, beta_status)
 
     if message != '':
