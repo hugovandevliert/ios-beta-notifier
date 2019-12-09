@@ -2,8 +2,8 @@
 
 This tool notifies you when one of your iOS beta applications become available!
 
-This application periodically crawls iOS beta sites to determine its status.
-When a beta becomes available, a message is sent to the user through a Telegram bot.
+This application periodically crawls iOS beta sites to determine its beta status.
+When a beta status is changed to _open_, the Telegram bot notifies the user with a message.
 Every day at 09:00, the user gets an overview of all betas.
 
 ## Installation
