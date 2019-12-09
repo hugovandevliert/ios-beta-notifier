@@ -41,14 +41,17 @@ def check_betas(always_send_result=False):
             continue
 
         beta_available = is_beta_available(html)
-
         if not beta_available and not always_send_result:
             continue
 
-        beta_status = 'available' if beta_available else 'not available'
+        if beta_available:
+            beta_status = 'available: {0}'.format(url)
+        else:
+            beta_status = 'not available'
         message += '\nThe {0} beta is {1}.'.format(name, beta_status)
 
-    print(telegram_bot_sendtext(bot_token, chat_id, message))
+    if message != '':
+        print(telegram_bot_sendtext(bot_token, chat_id, message))
 
 
 def get_html(url):
