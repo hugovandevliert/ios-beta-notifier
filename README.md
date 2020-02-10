@@ -45,6 +45,12 @@ To run the beta notifier:
 python3 notifier.py
 ```
 
+or just:
+
+```bash
+./notifier.py
+```
+
 It is recommended to run the application as a background process or a service.
 
 ## Authors
